@@ -44,7 +44,7 @@ Resources:
       EnableDnsSupport: true
       Tags:
         - Key: Name
-          Value: !Sub '${ProjectName}-vpc'
+          Value: !Sub 'vpc'
 
   PublicSubnet1:
     Type: AWS::EC2::Subnet
@@ -55,7 +55,7 @@ Resources:
       MapPublicIpOnLaunch: true
       Tags:
         - Key: Name
-          Value: !Sub '${ProjectName}-public-subnet-1'
+          Value: !Sub 'public-subnet-1'
 
   PublicSubnet2:
     Type: AWS::EC2::Subnet
@@ -66,7 +66,7 @@ Resources:
       MapPublicIpOnLaunch: true
       Tags:
         - Key: Name
-          Value: !Sub '${ProjectName}-public-subnet-2'
+          Value: !Sub 'public-subnet-2'
 
   PrivateSubnet1:
     Type: AWS::EC2::Subnet
@@ -76,7 +76,7 @@ Resources:
       AvailabilityZone: !Select [0, !GetAZs '']
       Tags:
         - Key: Name
-          Value: !Sub '${ProjectName}-private-subnet-1'
+          Value: !Sub 'private-subnet-1'
 
   PrivateSubnet2:
     Type: AWS::EC2::Subnet
@@ -86,7 +86,7 @@ Resources:
       AvailabilityZone: !Select [1, !GetAZs '']
       Tags:
         - Key: Name
-          Value: !Sub '${ProjectName}-private-subnet-2'
+          Value: !Sub 'private-subnet-2'
 
   PrivateSubnet3:
     Type: AWS::EC2::Subnet
@@ -96,14 +96,14 @@ Resources:
       AvailabilityZone: !Select [2, !GetAZs '']
       Tags:
         - Key: Name
-          Value: !Sub '${ProjectName}-private-subnet-3'
+          Value: !Sub 'private-subnet-3'
 
   InternetGateway:
     Type: AWS::EC2::InternetGateway
     Properties:
       Tags:
         - Key: Name
-          Value: !Sub '${ProjectName}-igw'
+          Value: !Sub 'igw'
 
   AttachGateway:
     Type: AWS::EC2::VPCGatewayAttachment
@@ -117,7 +117,7 @@ Resources:
       VpcId: !Ref VPC
       Tags:
         - Key: Name
-          Value: !Sub '${ProjectName}-public-rt'
+          Value: !Sub 'public-rt'
 
   PublicRoute:
     Type: AWS::EC2::Route
@@ -158,7 +158,7 @@ Resources:
       VpcId: !Ref VPC
       Tags:
         - Key: Name
-          Value: !Sub '${ProjectName}-private-rt'
+          Value: !Sub 'private-rt'
   
   PrivateRoute:
     Type: AWS::EC2::Route
@@ -189,7 +189,7 @@ Resources:
   DataLakeBucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: !Sub '${ProjectName}-data-lake-${AWS::AccountId}'
+      BucketName: !Sub 'data-lake-${AWS::AccountId}'
       VersioningConfiguration:
         Status: Enabled
       PublicAccessBlockConfiguration:
@@ -198,10 +198,10 @@ Resources:
         IgnorePublicAcls: true
         RestrictPublicBuckets: true
 
-  AirflowBucket:
+  AirflowBucketName:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: !Sub '${ProjectName}-airflow-${AWS::AccountId}'
+      BucketName: !Sub 'airflow-${AWS::AccountId}'
       VersioningConfiguration:
         Status: Enabled
       PublicAccessBlockConfiguration:
@@ -213,7 +213,7 @@ Resources:
   AthenaBucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: !Sub '${ProjectName}-athena-results-${AWS::AccountId}'
+      BucketName: !Sub 'athena-results-${AWS::AccountId}'
       PublicAccessBlockConfiguration:
         BlockPublicAcls: true
         BlockPublicPolicy: true
@@ -225,7 +225,7 @@ Resources:
   GlueServiceRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: !Sub '${ProjectName}-glue-service-role'
+      RoleName: !Sub 'glue-service-role'
       AssumeRolePolicyDocument:
         Version: '2012-10-17'
         Statement:
@@ -315,7 +315,7 @@ Resources:
   RedshiftServiceRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: !Sub '${ProjectName}-redshift-service-role'
+      RoleName: !Sub 'redshift-service-role'
       AssumeRolePolicyDocument:
         Version: '2012-10-17'
         Statement:
@@ -361,7 +361,7 @@ Resources:
   DataCatalogUserRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: !Sub '${ProjectName}-datacatalog-user-role'
+      RoleName: !Sub 'datacatalog-user-role'
       AssumeRolePolicyDocument:
         Version: '2012-10-17'
         Statement:
@@ -395,7 +395,7 @@ Resources:
   AirflowExecutionRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: !Sub '${ProjectName}-airflow-execution-role'
+      RoleName: !Sub 'airflow-execution-role'
       AssumeRolePolicyDocument:
         Version: '2012-10-17'
         Statement:
@@ -422,7 +422,7 @@ Resources:
   AirflowTaskRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: !Sub '${ProjectName}-airflow-task-role'
+      RoleName: !Sub 'airflow-task-role'
       AssumeRolePolicyDocument:
         Version: '2012-10-17'
         Statement:
@@ -449,7 +449,7 @@ Resources:
   DAGSyncTaskRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: !Sub '${ProjectName}-dag-sync-task-role'
+      RoleName: !Sub 'dag-sync-task-role'
       AssumeRolePolicyDocument:
         Version: '2012-10-17'
         Statement:
@@ -488,7 +488,7 @@ Resources:
   GlueCrawler:
     Type: AWS::Glue::Crawler
     Properties:
-      Name: !Sub '${ProjectName}-s3-crawler'
+      Name: !Sub 's3-crawler'
       Role: !GetAtt GlueServiceRole.Arn
       DatabaseName: !Ref GlueDatabase
       Targets:
@@ -527,7 +527,7 @@ Resources:
     Type: AWS::Glue::Crawler
     DependsOn: RedshiftServerlessWorkgroup
     Properties:
-      Name: !Sub '${ProjectName}-redshift-crawler'
+      Name: !Sub 'redshift-crawler'
       Role: !GetAtt GlueServiceRole.Arn
       DatabaseName: !Ref GlueDatabase
       Targets:
@@ -563,7 +563,7 @@ Resources:
     Properties:
       CatalogId: !Ref AWS::AccountId
       ConnectionInput:
-        Name: !Sub '${ProjectName}-redshift-connection-az1'
+        Name: !Sub 'redshift-connection-az1'
         Description: 'Connection to Redshift Serverless'
         ConnectionType: JDBC
         ConnectionProperties:
@@ -582,7 +582,7 @@ Resources:
     Properties:
       CatalogId: !Ref AWS::AccountId
       ConnectionInput:
-        Name: !Sub '${ProjectName}-redshift-connection-az2'
+        Name: !Sub 'redshift-connection-az2'
         Description: 'Connection to Redshift Serverless'
         ConnectionType: JDBC
         ConnectionProperties:
@@ -601,7 +601,7 @@ Resources:
     Properties:
       CatalogId: !Ref AWS::AccountId
       ConnectionInput:
-        Name: !Sub '${ProjectName}-redshift-connection-az3'
+        Name: !Sub 'redshift-connection-az3'
         Description: 'Connection to Redshift Serverless'
         ConnectionType: JDBC
         ConnectionProperties:
@@ -640,7 +640,7 @@ Resources:
   RedshiftServerlessNamespace:
     Type: AWS::RedshiftServerless::Namespace
     Properties:
-      NamespaceName: !Sub '${ProjectName}-namespace'
+      NamespaceName: !Sub 'namespace'
       AdminUsername: !Ref RedshiftMasterUsername
       AdminUserPassword: !Ref RedshiftMasterPassword
       IamRoles:
@@ -650,7 +650,7 @@ Resources:
   RedshiftServerlessWorkgroup:
     Type: AWS::RedshiftServerless::Workgroup
     Properties:
-      WorkgroupName: !Sub '${ProjectName}-workgroup'
+      WorkgroupName: !Sub 'workgroup'
       NamespaceName: !Ref RedshiftServerlessNamespace
       BaseCapacity: 8  # Redshift Processing Units (RPUs) - minimum is 8
       PubliclyAccessible: false
@@ -666,7 +666,7 @@ Resources:
   AthenaWorkGroup:
     Type: AWS::Athena::WorkGroup
     Properties:
-      Name: !Sub '${ProjectName}-workgroup'
+      Name: !Sub 'workgroup'
       Description: 'Primary workgroup for data platform'
       State: ENABLED
       WorkGroupConfiguration:
@@ -678,7 +678,7 @@ Resources:
   ECSCluster:
     Type: AWS::ECS::Cluster
     Properties:
-      ClusterName: !Sub '${ProjectName}-airflow-cluster'
+      ClusterName: !Sub 'airflow-cluster'
       CapacityProviders:
         - FARGATE
         - FARGATE_SPOT
@@ -723,7 +723,7 @@ Resources:
   AirflowDatabase:
     Type: AWS::RDS::DBInstance
     Properties:
-      DBInstanceIdentifier: !Sub '${ProjectName}-airflow-db'
+      DBInstanceIdentifier: !Sub 'airflow-db'
       DBInstanceClass: 'db.t3.micro'
       Engine: 'postgres'
       EngineVersion: '17.4'
@@ -740,7 +740,7 @@ Resources:
   AirflowWebserverTaskDefinition:
     Type: AWS::ECS::TaskDefinition
     Properties:
-      Family: !Sub '${ProjectName}-airflow-webserver'
+      Family: !Sub 'airflow-webserver'
       NetworkMode: awsvpc
       RequiresCompatibilities:
         - FARGATE
@@ -837,7 +837,7 @@ Resources:
   AirflowSchedulerTaskDefinition:
     Type: AWS::ECS::TaskDefinition
     Properties:
-      Family: !Sub '${ProjectName}-airflow-scheduler'
+      Family: !Sub 'airflow-scheduler'
       NetworkMode: awsvpc
       RequiresCompatibilities:
         - FARGATE
@@ -905,7 +905,7 @@ Resources:
     Properties:
       FileSystemTags:
         - Key: Name
-          Value: !Sub '${ProjectName}-airflow-dags'
+          Value: !Sub 'airflow-dags'
 
   AirflowEFSMountTarget1:
     Type: AWS::EFS::MountTarget
@@ -936,7 +936,7 @@ Resources:
     Properties:
       FileSystemTags:
         - Key: Name
-          Value: !Sub '${ProjectName}-airflow-dags'
+          Value: !Sub 'airflow-dags'
 
   AirflowConfigEFSMountTarget1:
     Type: AWS::EFS::MountTarget
@@ -977,7 +977,7 @@ Resources:
   DAGSyncTaskDefinition:
     Type: AWS::ECS::TaskDefinition
     Properties:
-      Family: !Sub '${ProjectName}-dag-sync'
+      Family: !Sub 'dag-sync'
       NetworkMode: awsvpc
       RequiresCompatibilities:
         - FARGATE
@@ -1037,7 +1037,7 @@ Resources:
   DAGSyncScheduleRule:
     Type: AWS::Events::Rule
     Properties:
-      Name: !Sub '${ProjectName}-dag-sync-schedule'
+      Name: !Sub 'dag-sync-schedule'
       Description: 'Trigger DAG sync every 5 minutes'
       ScheduleExpression: 'rate(5 minutes)'
       State: ENABLED
@@ -1061,7 +1061,7 @@ Resources:
   EventBridgeExecutionRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: !Sub '${ProjectName}-eventbridge-execution-role'
+      RoleName: !Sub 'eventbridge-execution-role'
       AssumeRolePolicyDocument:
         Version: '2012-10-17'
         Statement:
@@ -1090,7 +1090,7 @@ Resources:
     Type: AWS::ECS::Service
     DependsOn: AirflowDatabase
     Properties:
-      ServiceName: !Sub '${ProjectName}-airflow-webserver'
+      ServiceName: !Sub 'airflow-webserver'
       Cluster: !Ref ECSCluster
       TaskDefinition: !Ref AirflowWebserverTaskDefinition
       DesiredCount: 1
@@ -1112,7 +1112,7 @@ Resources:
     Type: AWS::ECS::Service
     DependsOn: AirflowDatabase
     Properties:
-      ServiceName: !Sub '${ProjectName}-airflow-scheduler'
+      ServiceName: !Sub 'airflow-scheduler'
       Cluster: !Ref ECSCluster
       TaskDefinition: !Ref AirflowSchedulerTaskDefinition
       DesiredCount: 1
@@ -1130,7 +1130,7 @@ Resources:
   AirflowALB:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
     Properties:
-      Name: !Sub '${ProjectName}-airflow-alb'
+      Name: !Sub 'airflow-alb'
       Scheme: internet-facing
       Type: application
       Subnets:
@@ -1153,7 +1153,7 @@ Resources:
   AirflowTargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
-      Name: !Sub '${ProjectName}-airflow-tg'
+      Name: !Sub 'airflow-tg'
       Port: 8080
       Protocol: HTTP
       TargetType: ip
@@ -1175,13 +1175,13 @@ Resources:
   AirflowLogGroup:
     Type: AWS::Logs::LogGroup
     Properties:
-      LogGroupName: !Sub '/aws/ecs/${ProjectName}-airflow'
+      LogGroupName: !Sub '/aws/ecs/airflow'
       RetentionInDays: 14
   
   DAGSyncLogGroup:
     Type: AWS::Logs::LogGroup
     Properties:
-      LogGroupName: !Sub '/aws/ecs/${ProjectName}-dag-sync'
+      LogGroupName: !Sub '/aws/ecs/dag-sync'
       RetentionInDays: 14
 
   S3LogGroup:
@@ -1195,40 +1195,40 @@ Outputs:
     Description: 'S3 Data Lake Bucket Name'
     Value: !Ref DataLakeBucket
     Export:
-      Name: !Sub '${ProjectName}-data-lake-bucket'
+      Name: !Sub 'data-lake-bucket'
 
   AthenaBucketName:
     Description: 'S3 Athena Results Bucket Name'
     Value: !Ref AthenaBucket
     Export:
-      Name: !Sub '${ProjectName}-athena-bucket'
+      Name: !Sub 'athena-bucket'
 
   GlueDatabaseName:
     Description: 'Glue Database Name'
     Value: !Ref GlueDatabase
     Export:
-      Name: !Sub '${ProjectName}-database'
+      Name: !Sub 'database'
 
   RedshiftServerlessEndpoint:
     Description: 'Redshift Serverless Workgroup Endpoint'
     Value: !GetAtt RedshiftServerlessWorkgroup.Workgroup.Endpoint.Address
     Export:
-      Name: !Sub '${ProjectName}-redshift-endpoint'
+      Name: !Sub 'redshift-endpoint'
 
   AirflowWebUI:
     Description: 'Airflow Web UI URL'
     Value: !Sub 'http://${AirflowALB.DNSName}'
     Export:
-      Name: !Sub '${ProjectName}-airflow-url'
+      Name: !Sub 'airflow-url'
 
   AthenaWorkGroupName:
     Description: 'Athena WorkGroup Name'
     Value: !Ref AthenaWorkGroup
     Export:
-      Name: !Sub '${ProjectName}-athena-workgroup'
+      Name: !Sub 'athena-workgroup'
 
   VPCId:
     Description: 'VPC ID'
     Value: !Ref VPC
     Export:
-      Name: !Sub '${ProjectName}-vpc-id'
+      Name: !Sub 'vpc-id'

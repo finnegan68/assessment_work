@@ -1,0 +1,22 @@
+1. Delete profile name from resources (because length too big)
+2. Rename AirflowBucket resource to AirflowBucketName cause we have 2 resources with same name
+
+Here is my commant to run stack
+
+aws cloudformation create-stack \
+  --stack-name finnegan68-data-platform \
+  --template-body file://DataPlatform.yaml \
+  --parameters \
+    ParameterKey=ProjectName,ParameterValue=finnegan68-data-platform \
+    ParameterKey=RedshiftMasterUsername,ParameterValue=admin \
+    ParameterKey=RedshiftMasterPassword,ParameterValue=Redshift123 \
+    ParameterKey=AirflowAdminUsername,ParameterValue=admin \
+    ParameterKey=AirflowAdminPassword,ParameterValue=Airflow123 \
+    ParameterKey=AirflowBucket,ParameterValue=airflow-bucket \
+  --capabilities CAPABILITY_NAMED_IAM \
+  --region eu-north-1
+
+
+  Command to check if somethinig wrong:
+
+  aws cloudformation describe-stack-events --stack-name finnegan68-data-platform --region eu-north-1
